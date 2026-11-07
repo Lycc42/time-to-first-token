@@ -28,6 +28,13 @@ Started on:
 - [ ] Tue. Stand up Prometheus and Grafana
 - [ ] Wed. Import the dashboard, confirm live panels
 - [ ] Thu. Map every metric to a panel
+  - [x] Read: [NVIDIA — LLM Inference Benchmarking: Fundamental Concepts](https://developer.nvidia.com/blog/llm-benchmarking-fundamental-concepts/) (2026-11-07)
+  - [ ] Read: [Databricks — LLM Inference Performance Engineering: Best Practices](https://www.databricks.com/blog/llm-inference-performance-engineering-best-practices)
+  - [ ] Map TTFT, ITL/TPOT, end-to-end latency, output TPS, and RPS to measured dashboard panels; verify each tool's metric definitions.
+  - **Reading note (2026-11-07, NVIDIA article published Apr 2025):** The performance metrics are still useful, but the article's representative ISL/OSL examples do not characterize the now-important multi-step coding-agent workload. Do not assume coding agents universally have high OSL.
+  - **Evidence (2026 coding-agent traces):** [From Requests to Sessions](https://systems.seas.harvard.edu/blog/agentic-traces-freeinference/) reports medians of ~129K total input tokens/request, ~491 uncached input tokens, and ~227 output tokens (separate distributions; not necessarily one request). [vLLM AgentX](https://vllm.ai/blog/2026-09-08-vllm-agentx) reports median 142K input, 444 output, and >96% prefix-cache hits in its benchmark.
+  - **Interpretation:** Repeated agent–tool loops carry long growing contexts, but often append only short tool results. **High total ISL != high fresh-prefill work** when prefixes are cached. Cache reuse varies across user pauses, model switches, context compaction, and engine policy. Long code generation and reasoning can still produce high OSL; describe distributions, not a universal ISL/OSL pair.
+  - **Future benchmark idea (not an extra task for current project closeout):** In addition to ISL/OSL, report cached/uncached input tokens, prefix-cache hit rate, request latency, per-session task latency and tool gaps; control workload/session structure and cache retention when comparing serving engines.
 - [ ] Fri. Modal benchmarking methodology
 
 ### Week 4: SGLang and batching
